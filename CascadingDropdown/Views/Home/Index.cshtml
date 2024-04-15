@@ -1,0 +1,33 @@
+﻿@model CascadingDropdown.Models.CountryViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<br /><br />
+<div class="container">
+    <div class="form-group">
+        @if(ViewBag.Country != null)
+        {
+            @Html.DropDownListFor(model => model.CountryId, ViewBag.Country as SelectList, "Select Country", new {@class="form-control"})
+        }
+        <br />
+        <div class="form-group">
+            @Html.DropDownListFor(model => model.StateId, new SelectList(""), "Select State", new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#CountryId").change(function () {
+            $.get("/Home/GetStateList", { CountryId: $("#CountryId").val() }, function (data) {
+                $("#StateId").empty();
+                $.each(data, function (index, row) {
+                    $("#StateId").append("<option value='"+row.StateId+"'>"+row.StateName+"</option>");
+                })
+            })
+            
+        })
+    })
+</script>
